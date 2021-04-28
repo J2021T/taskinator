@@ -23,6 +23,8 @@ var completeEditTask = function(taskName, taskType, taskId) {
     }
   };
 
+  saveTasks();
+
   alert("Task Updated!");
 
   formEl.removeAttribute('data-task-id');
@@ -131,11 +133,10 @@ var createTaskEl = function(taskDataObj) {
 
   tasks.push(taskDataObj);
 
+  saveTasks();
+
   // increase task counter for next unique id
   taskIdCounter++;
-
-  console.log(taskDataObj);
-  console.log(taskDataObj.status);
 };
 
 formEl.addEventListener("submit", taskFormHandler);
@@ -182,11 +183,11 @@ var taskStatusChangeHandler = function(event) {
       tasks[i].status = statusValue;
     }
   }
-  console.log(tasks);
+  
+  saveTasks();
 }
 
 var editTask = function(taskId) {
-  console.log('editing task #' + taskId);
 
   // get task list item element
   var taskSelected = document.querySelector('.task-item[data-task-id="' + taskId + '"]');
@@ -212,7 +213,7 @@ var deleteTask = function(taskId) {
 
   // loop through current tasks
   for (var i = 0; i < tasks.length; i++) {
-    // if tasks[i].id doesn't match the value of taskId, let's keep that task
+    // if tasks[i].id doesn't match the value of taskId, let's keep that task & pysh it into the new array
     if (tasks[i].id !== parseInt(taskId)) {
       updatedTaskArr.push(tasks[i]);
     }
@@ -220,9 +221,15 @@ var deleteTask = function(taskId) {
 
   // reassign tasks array to be the same as updatedTaskArr
   tasks = updatedTaskArr;
+
+  saveTasks();
 };
 
 
 pageContentEl.addEventListener('click', taskButtonHandler);
+
+var saveTasks = function() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 pageContentEl.addEventListener('change', taskStatusChangeHandler);
